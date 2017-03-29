@@ -785,25 +785,127 @@ RESULT:
 222222
 ENGLISH: Select all payment data
 
-QUERY:
+QUERY: SELECT DISTINCT UPPER(brand) FROM NONSERVICE_TAG_ITEM;
 RESULT:
-ENGLISH:
+dell
+lenovo
+apple
+ENGLISH: Lists all distinct brands from the non-service tag items
 
-QUERY:
+QUERY: SELECT employee_id FROM WORKS_FOR WHERE department_name = 'Accounting';
 RESULT:
-ENGLISH:
+0
+1111111111
+ENGLISH: Selects all employee ids where department_name = accounting
 
-QUERY:
-RESULT:
-ENGLISH:
+QUERY: SELECT SUM(cost) FROM SERVICE_TAG_ITEM;
+RESULT: 4676.5400
+ENGLISH: Find the total cost of all SERVICE_TAG_ITEMs
 
-QUERY:
+QUERY: SELECT nest.* FROM ( SELECT * FROM DEPARTMENT WHERE DEPARTMENT.department_name = 'Accounting' ) nest;
+RESULT: Accounting
+ENGLISH: Nested query to get departments named Accounting
+
+QUERY: SELECT brand FROM NONSERVICE_TAG_ITEM UNION SELECT brand FROM SERVICE_TAG_ITEM ORDER BY brand;
 RESULT:
-ENGLISH:
+apple
+dell
+lenovo
+ENGLISH: Shows all brands from both non service and service tag items
+
+QUERY: SELECT warranty_id FROM WARRANTY WHERE Warranty_type = 'Parts';
+RESULT: 4949494949494949
+ENGLISH: Find all the warranty_id's of computers that have a warranty_type of parts only.
+
+QUERY: SELECT * FROM STORE_LOCATION LEFT JOIN WORKS_AT ON STORE_LOCATION.address = WORKS_AT.address UNION ALL SELECT * FROM STORE_LOCATION RIGHT JOIN WORKS_AT ON STORE_LOCATION.address = WORKS_AT.address;
+RESULT:
+1232 WASHINGTON
+0
+NULL
+NULL
+
+www.forsale.com
+1
+NULL
+NULL
+
+NULL
+NULL
+8888888888
+8056 SW. Corona, SC 29406
+
+NULL
+NULL
+0
+8485 N. Brandywine Drive Palme
+
+NULL
+NULL
+1111111111
+55 Wood Court Erie, PA 16506
+
+NULL
+NULL
+2222222222
+926 Fairview Road Pewaukee, WI
+
+NULL
+NULL
+3333333333
+9758 Schoolhouse Court Southga
+
+NULL
+NULL
+4444444444
+7533 Briarwood St. Madison, AL
+
+NULL
+NULL
+5555555555
+63 West Tower Dr. Freeport, NY
+
+NULL
+NULL
+6666666666
+90 Squaw Creek Dr. Oakland Gar
+
+NULL
+NULL
+7777777777
+7899 Deerfield Street Middle R
+
+NULL
+NULL
+9999999999
+43 Ann St. Vineland, NJ 08360
+ENGLISH: Gives the locations of where the employees work.
 
 QUERY: UPDATE FEE,PAYMENT SET FEE.amount = FEE.amount - PAYMENT.payment_amount WHERE PAYMENT.fee_number = FEE.fee_number;
 RESULT: 4 rows affected (which matches how many payments were made)
 ENGLISH: Updating the fee table after accepting a payment
+
+QUERY: SELECT * FROM PAYMENT WHERE payment_amount > 10;
+RESULT: 
+2015-03-12
+15.0000
+1111111111
+777777
+
+2015-12-18
+122.0000
+1111111112
+777777
+
+2016-01-01
+500.0000
+0
+0
+
+2016-09-26
+214.0000
+6666666666
+444444
+ENGLISH: Selects all payment data when payment amount is over 10
 
 
 SQL SPECIFICATION FROM PHASE 1:
