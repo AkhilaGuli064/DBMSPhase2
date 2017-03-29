@@ -1,0 +1,951 @@
+Team member names: Liam O'Riordan and Kendrick Urbaniak
+Names of Tables we worked on: We both worked on the project at the same time so all of the work was done by both of us.
+
+
+All statements to create the tables and fill it with data.
+
+	Create table fee(
+		FEE_NUMBER DECIMAL(6,0) NOT NULL PRIMARY KEY,
+		AMOUNT FLOAT
+	);
+
+	Create table owes(
+		FEE_NUMBER DECIMAL(6,0) NOT NULL PRIMARY KEY,
+		DEPARTMENT_NAME VARCHAR(30) NOT NULL,
+		UNIQUE(FEE_NUMBER),
+FOREIGN KEY (FEE_NUMBER) REFERENCES FEE(FEE_NUMBER),
+		FOREIGN KEY (DEPARTMENT_NAME) REFERENCES DEPARTMENT(DEPARTMENT_NAME)
+);
+
+	Create table department(
+		DEPARTMENT_NAME VARCHAR(30) NOT NULL PRIMARY KEY
+		);
+
+	Create table works_for(
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL PRIMARY KEY,
+		DEPARTMENT_NAME VARCHAR(30) NOT NULL,
+		FOREIGN KEY (EMPLOYEE_ID) REFERENCES EMPLOYEE(EMPLOYEE_ID),
+		FOREIGN KEY (DEPARTMENT_NAME) REFERENCES DEPARTMENT(DEPARTMENT_NAME),
+		UNIQUE(EMPLOYEE_ID)
+		);
+
+	Create table employee(
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL PRIMARY KEY,
+		NAME  VARCHAR(20),
+		JOB_TITLE VARCHAR(20)
+		);
+
+	Create table works_at(
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL PRIMARY KEY,
+		ADDRESS VARCHAR(30),
+		FOREIGN KEY( EMPLOYEE_ID) REFERENCES EMPLOYEE(EMPLOYEE_ID),
+		FOREIGN KEY (ADDRESS) REFERENCES WORKPLACE_LOCATION(ADDRESS),
+		UNIQUE(EMPLOYEE_ID)
+		);
+
+	Create table workplace_location(
+		ADDRESS VARCHAR(30) NOT NULL PRIMARY KEY,
+		BUILDING_NAME VARCHAR(30)
+		);
+
+	Create table check_out(
+		PURPOSE VARCHAR(20),
+		DUE_DATE DATE,
+		CHECKED_OUT_DATE DATE,
+		EQUIPMENT_ID DECIMAL(9,0) NOT NULL PRIMARY KEY,
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL,
+		FOREIGN KEY (EQUIPMENT_ID) REFERENCES ITEM(EQUIPMENT_ID),
+		FOREIGN KEY (EMPLOYEE_ID) REFERENCES EMPLOYEE(EMPLOYEE_ID),
+		UNIQUE(EQUIPMENT_ID)
+		);
+
+	Create table item(
+		EQUIPMENT_ID DECIMAL(9,0) NOT NULL PRIMARY KEY,
+		SERIAL_NUMBER DECIMAL(10,0)
+		);
+
+	Create table for_sale_at(
+		EQUIPMENT_ID DECIMAL(9,0) NOT NULL PRIMARY KEY,
+		PRICE DECIMAL(13,2) NOT NULL,
+		ADDRESS VARCHAR(30),
+		FOREIGN KEY (EQUIPMENT_ID) REFERENCES ITEM(EQUIPMENT_ID),
+		FOREIGN KEY (ADDRESS) REFERENCES STORE_LOCATION(ADDRESS),
+		UNIQUE(EQUIPMENT_ID,ADDRESS)
+		);
+
+	Create table store_location(
+		ADDRESS VARCHAR(30) NOT NULL PRIMARY KEY,
+		ONLINE BOOLEAN NOT NULL
+		);
+
+	Create table service_tag_item(
+		DEVICE_TYPE VARCHAR(10),
+		MODEL_NUMBER DECIMAL(8,0) NOT NULL,
+		BRAND VARCHAR(10),
+		MOTHERBOARD VARCHAR(15),
+		CPU VARCHAR(10),
+		RAM VARCHAR(5),
+		COST DECIMAL(12,4),
+		SERIAL_NUMBER DECIMAL(10,0) NOT NULL
+		);
+
+	Create table nonservice_tag_item(
+		BRAND VARCHAR(10),
+		DEVICE_TYPE VARCHAR(10),
+		MODEL_NUMBER DECIMAL(8,0) NOT NULL,
+		COST DECIMAL(12,4),
+		SERIAL_NUMBER DECIMAL(10,0) NOT NULL PRIMARY KEY
+		);
+
+	Create table warranty(
+		START_DATE DATE,
+		END_DATE DATE,
+		WARRANTY_TYPE VARCHAR(20),
+		WARRANTY_ID DECIMAL(16,0),
+		SERIAL_NUMBER DECIMAL(10,0) NOT NULL,
+		PRIMARY KEY(SERIAL_NUMBER, WARRANTY_ID)
+		);
+
+	Create table payment(
+		PAYMENT_DATE DATE,
+		PAYMENT_AMOUNT DECIMAL(12,4),
+		PAYMENT_NUMBER DECIMAL(10,0),
+		FEE_NUMBER DECIMAL(6,0) NOT NULL,
+		PRIMARY KEY (PAYMENT_NUMBER, FEE_NUMBER)
+		);
+
+	Create table fee_payment(
+		PAYMENT_NUMBER DECIMAL(10,0) NOT NULL,
+		FEE_NUMBER DECIMAL(6,0) NOT NULL,
+		PRIMARY KEY (PAYMENT_NUMBER, FEE_NUMBER)
+		);
+
+	Create table service_tag(
+		WARRANTY_ID DECIMAL(16,0),
+		SERVICE_TAG_NUMBER DECIMAL(20,0),
+		SERIAL_NUMBER DECIMAL(10,0)
+);
+
+Insert into CHECK_OUT ( purpose, due_date, checked_out_date, equipment_id, employee_id) VALUES ('convention', STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), STR_TO_DATE('02/28/2017',  '%m/%d/%Y'), 00000001, 8888888888), ('meeting', STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), 00000002, 7777777777), ('travel', STR_TO_DATE('03/28/2017',  '%m/%d/%Y'), STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), 00000003, 6666666666), ('lecture', STR_TO_DATE('04/02/2017',  '%m/%d/%Y'), STR_TO_DATE('02/02/2017',  '%m/%d/%Y'), 00000004, 5555555555), ('lecture', STR_TO_DATE('05/02/2017',  '%m/%d/%Y'), STR_TO_DATE('02/28/2017',  '%m/%d/%Y'), 00000005, 4444444444), ('convention', STR_TO_DATE('03/29/2017',  '%m/%d/%Y'), STR_TO_DATE('03/22/2017',  '%m/%d/%Y'), 00000006, 3333333333), ('convention', STR_TO_DATE('03/21/2017',  '%m/%d/%Y'), STR_TO_DATE('02/28/2017',  '%m/%d/%Y'), 00000007, 2222222222), ('travel', STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), STR_TO_DATE('02/28/2017',  '%m/%d/%Y'), 00000008, 1111111111), ('travel', STR_TO_DATE('03/10/2017',  '%m/%d/%Y'), STR_TO_DATE('02/31/2017',  '%m/%d/%Y'), 00000009, 0000000000), ('meeting', STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), 000000010, 8888888888);
+
+Insert into DEPARTMENT (department_name) VALUES ('Advising'), ('Accounting'), ('Information Services'), ('Study Abroad'), ('Graduate Studies'), ('Honors'), ('Food Services'), ('Security'), ('Parking Services'), ('Biology');
+
+Insert into EMPLOYEE (employee_id, name, job_title) VALUES (8888888888, 'Bob Dylan', 'CEO'), (0000000000, 'Ryan Reynolds', 'elite janitor'), (1111111111, 'Megan Fox', 'accountant'), (2222222222, 'Jeff Gordan', 'security guard tier one'), (3333333333, 'Jeff Racing', 'security guard tier two'), (4444444444, 'Reynolds Ryan', 'janitors assistant'), (5555555555, 'Cloud Nine', 'IS officer'), (6666666666, 'Phoenix One', 'CIO'), (7777777777, 'Team Envy', 'CMO'), (9999999999, 'Abednego Ramiro', 'CBO');
+
+Insert into FEE ( fee_number, amount ) VALUES (111111, 10.00), (222222, 100.00), (333333, 246.00), (444444, 214.00), (555555, 124.15), (666666, 1274.00), (777777, 1245.00), (888888, 645.00), (999999, 12.00), (000000, 1234.18);
+
+Insert into FEE_PAYMENT (payment_number, fee_number) VALUES (1111111111, 777777), (2222222222, 888888), (3333333333, 999999), (4444444444, 666666), (5555555555, 555555), (6666666666, 444444), (7777777777, 333333), (8888888888, 222222), (9999999999, 111111), (0000000000, 000000);
+
+Insert into FOR_SALE_AT (equipment_id, price, address) VALUES (00000001, 123.00, 'www.forsale.com'), (00000021, 121.00, 'www.forsale.com'), (00000022, 1023.00, '1232 WASHINGTON'), (00000006, 234.00,'1232 WASHINGTON');
+
+Insert into ITEM ( equipment_id, serial_number) VALUES (00000001, 1212121212), (00000002, 1313131313), (00000003, 1414141414), (00000004, 1515151515), (00000005, 1616161616), (00000006, 1717171717), (00000007, 1818181818), (00000008, 1919191919), (00000009, 2020202020), (00000000, 2121212121), (00000021, 2222222222), (00000022, 2323232323), (00000023, 2424242424);
+
+Insert into NONSERVICE_TAG_ITEM ( brand, device_type, model_number, cost, serial_number) VALUES ('dell', 'monitor', 790, 232.21, 1212121212), ('lenovo', 'mouse', 21, 2123.21, 1313131313), ('apple', 'charger', 2.1, 8888.1, 1414141414);
+
+Insert into OWES (fee_number, department_name) VALUES (777777, 'Judges'), (888888, 'Accounting'), (999999, 'Advising'), (666666, 'Advising'), (555555, 'Study Abroad'), (444444, 'Graduate Studies'), (333333, 'Honors'), (222222, 'Food Services'), (111111, 'Information Services'), (000000, 'Security');
+
+Insert into PAYMENT ( payment_date, payment_amount, payment_number, fee_number) VALUES (STR_TO_DATE('03/12/2015', '%m/%d/%Y'), 15.00, 1111111111, 777777), (STR_TO_DATE('12/18/2015', '%m/%d/%Y'), 122.00, 1111111112, 777777), (STR_TO_DATE('01/01/2016', '%m/%d/%Y'), 500.00, 0000000000, 000000), (STR_TO_DATE('09/26/2016', '%m/%d/%Y'), 214.00, 6666666666, 444444), (STR_TO_DATE('03/13/2017', '%m/%d/%Y'), 1.10, 8888888888, 222222);
+
+Insert into SERVICE_TAG (warranty_id, service_tag_number, serial_number) VALUES (4545454545454545, 99999999999999999999, 2222222222), (4646464646464646, 88888888888888888888, 2222222222), (4747474747474747, 66666666666666666666, 2323232323), (4848484848484848, 55555555555555555555, 2323232323), (4949494949494949, 4444444444444444444444444, 2424242424);
+
+Insert into SERVICE_TAG_ITEM (device_type, model_number, brand, motherboard, cpu, ram, cost, serial_number) VALUES ('desktop', 790, 'dell', 'p232', 'i7 g2', '8GB', 1222.21, 2222222222), ('laptop', 1232, 'lenovo', 'a121', 'i5 g3', '4GB', 2222.21, 2323232323), ('tablet', 200, 'apple', 'a11', 'i2 g1', '9GB', 1232.12, 2424242424);
+
+Insert into STORE_LOCATION ( address, online ) VALUES ('1232 WASHINGTON', FALSE), ('www.forsale.com', true);
+
+Insert into WARRANTY (start_date, end_date, warranty_type, warranty_id, serial_number) VALUES (STR_TO_DATE('12/05/2013', '%m/%d/%Y'), STR_TO_DATE('06/12/2014', '%m/%d/%Y'), 'PARTS & LABOR', 4545454545454545, 2222222222), (STR_TO_DATE('03/11/2015', '%m/%d/%Y'), STR_TO_DATE('05/15/2015', '%m/%d/%Y'), 'FULL', 4646464646464646, 2222222222), (STR_TO_DATE('06/22/2015', '%m/%d/%Y'), STR_TO_DATE('10/30/2015', '%m/%d/%Y'), 'FULL', 4747474747474747, 2323232323), (STR_TO_DATE('07/28/2016', '%m/%d/%Y'), STR_TO_DATE('08/29/2017', '%m/%d/%Y'), 'FULL', 4848484848484848, 2323232323), (STR_TO_DATE('04/18/2012', '%m/%d/%Y'), STR_TO_DATE('01/15/2013', '%m/%d/%Y'), 'PARTS', 4949494949494949, 2424242424);
+
+Insert into WORKPLACE_LOCATION (address, building_name) VALUES ('8056 SW. Corona, SC 29406', 'A'), ('8485 N. Brandywine Drive Palmetto, FL 34221', 'B'), ('55 Wood Court Erie, PA 16506', 'C'), ('926 Fairview Road Pewaukee, WI 53072', 'D'), ('9758 Schoolhouse Court Southgate, MI 48195', 'E'), ('7533 Briarwood St. Madison, AL 35758', 'F'), ('63 West Tower Dr. Freeport, NY 11520', 'G'), ('90 Squaw Creek Dr. Oakland Gardens, NY 11364', 'H'), ('7899 Deerfield Street Middle River, MD 21220', 'I');
+
+Insert into WORKS_AT (employee_id, address) VALUES (8888888888, '8056 SW. Corona, SC 29406'), (0000000000, '8485 N. Brandywine Drive Palmetto, FL 34221'), (1111111111, '55 Wood Court Erie, PA 16506'), (2222222222, '926 Fairview Road Pewaukee, WI 53072'), (3333333333, '9758 Schoolhouse Court Southgate, MI 48195'), (4444444444, '7533 Briarwood St. Madison, AL 35758'), (5555555555, '63 West Tower Dr. Freeport, NY 11520'), (6666666666, '90 Squaw Creek Dr. Oakland Gardens, NY 11364'), (7777777777, '7899 Deerfield Street Middle River, MD 21220'), (9999999999, '43 Ann St. Vineland, NJ 08360');
+
+Insert into WORKS_FOR (employee_id, department_name) VALUES (0000000000, 'Accounting'), (1111111111, 'Accounting'), (2222222222, 'Honors'), (3333333333, 'Honors'), (4444444444, 'Graduate Studies'), (5555555555, 'Graduate Studies'), (6666666666, 'Food Services'), (7777777777, 'Information Services'), (8888888888, 'Study Abroad'), (9999999999, 'Security');
+
+
+
+
+
+TESTING FOR Foreign key constraint issues does not work.  This query should not work with the way that we have our database setup but it does get inserted.  We have triple checked that we have the foreign key constraint setup in the create tables.
+
+Insert into CHECK_OUT ( purpose, due_date, checked_out_date, equipment_id, employee_id)  VALUE ('meeting', STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), STR_TO_DATE('03/02/2017',  '%m/%d/%Y'), 00002002, 7777777347);
+
+We decided to not implement the InnoDB because it would change the original specification that we submitted in phase 1 which would have been the only way to implement the Foreign Key Constraints.
+
+
+SQL Queries follow
+
+QUERY: UPDATE FEE,PAYMENT SET FEE.amount = FEE.amount - PAYMENT.payment_amount WHERE PAYMENT.fee_number = FEE.fee_number;
+RESULT:
+ENGLISH: Updating the fee table after accepting a payment
+
+QUERY: SELECT * FROM WARRANTY WHERE CURDATE() > STR_TO_DATE(WARRANTY.end_date, '%Y-%m-%d');
+RESULT:
+2013-12-05
+2014-06-12
+PARTS & LABOR
+4545454545454545
+2222222222
+
+2015-03-11
+2015-05-15
+FULL
+4646464646464646
+2222222222
+
+2015-06-22
+2015-10-30
+FULL
+4747474747474747
+2323232323
+
+2012-04-18
+2013-01-15
+PARTS
+4949494949494949
+2424242424
+ENGLISH: Select the warranties that are expired
+
+QUERY: SELECT * FROM WARRANTY WHERE WARRANTY.warranty_type = 'FULL';
+RESULT:
+2015-03-11
+2015-05-15
+FULL
+4646464646464646
+2222222222
+
+2015-06-22
+2015-10-30
+FULL
+4747474747474747
+2323232323
+
+2016-07-28
+2017-08-29
+FULL
+4848484848484848
+2323232323
+ENGLISH: Select the warranties for computers that are FULL
+
+QUERY: SELECT SUM(cost) FROM NONSERVICE_TAG_ITEM;
+RESULT: 11243.5200
+ENGLISH: Find the total cost of all NonService_Tag_Items
+
+QUERY: SELECT EQUIPMENT_ID FROM ITEM Join SERVICE_TAG_ITEM WHERE SERVICE_TAG_ITEM.model_number = 790 and ITEM.serial_number = SERVICE_TAG_ITEM.serial_number;
+RESULT: 21
+ENGLISH: Find all items of Model_Number (usefull for recalls).  This select statement could also be used for NONSERVICE_TAG_ITEMs
+
+QUERY: SELECT * FROM FOR_SALE_AT WHERE price > 20 HAVING address='www.forsale.com';
+RESULT:
+1
+123.00
+www.forsale.com
+
+21
+121.00
+www.forsale.com
+ENGLISH: Find all items that are over $20 at www.forsale.com
+
+QUERY: SELECT model_number as Computer_Type FROM SERVICE_TAG_ITEM;
+RESULT:
+790
+1232
+200
+ENGLISH: Grab all Service_Tag_Items model_number and rename it for easier understanding of a person viewing this data that is not familiar with what a model_number represents
+
+QUERY: SELECT * FROM WARRANTY WHERE WARRANTY.start_date < STR_TO_DATE('02/02/2016', '%m/%d/%Y');
+RESULT:
+2013-12-05
+2014-06-12
+PARTS & LABOR
+4545454545454545
+2222222222
+
+2015-03-11
+2015-05-15
+FULL
+4646464646464646
+2222222222
+
+2015-06-22
+2015-10-30
+FULL
+4747474747474747
+2323232323
+
+2012-04-18
+2013-01-15
+PARTS
+4949494949494949
+2424242424
+ENGLISH: Find all warranties that started before 2/2/2016
+
+QUERY: SELECT AVG(price) FROM FOR_SALE_AT WHERE address='www.forsale.com';
+RESULT: 122.000000
+ENGLISH: Find the average price of items at www.forsale.com to determine the risk of the average asset
+
+QUERY: SELECT MIN(amount) FROM FEE;
+RESULT: 10
+ENGLISH: Find the minimum(amount) from FEE table
+
+QUERY: SELECT * FROM EMPLOYEE;
+RESULT:
+8888888888
+Bob Dylan
+CEO
+
+0
+Ryan Reynolds
+elite janitor
+
+1111111111
+Megan Fox
+accountant
+
+2222222222
+Jeff Gordan
+security guard tier
+
+3333333333
+Jeff Racing
+security guard tier
+
+4444444444
+Reynolds Ryan
+janitors assistant
+
+5555555555
+Cloud Nine
+IS officer
+
+6666666666
+Phoenix One
+CIO
+
+7777777777
+Team Envy
+CMO
+
+9999999999
+Abednego Ramiro
+CBO
+ENGLISH: Gives all employees
+
+QUERY: SELECT COUNT(DISTINCT brand) FROM SERVICE_TAG_ITEM;
+RESULT: 3
+ENGLISH: Gives amount of different brands for the items with service tags
+
+QUERY: SELECT * FROM OWES WHERE department_name='Accounting';
+RESULT: 888888 Accounting
+ENGLISH: Selects all fees where the department that has them is Accounting
+
+QUERY: SELECT * FROM NONSERVICE_TAG_ITEM ORDER BY cost;
+RESULT:
+dell
+monitor
+790
+232.2100
+1212121212
+
+lenovo
+mouse
+21
+2123.2100
+1313131313
+
+apple
+charger
+2
+8888.1000
+1414141414
+ENGLISH: Selects all non-service tag items and orders them by their cost
+
+QUERY: SELECT MAX(amount) FROM FEE; 
+RESULT: 1274
+ENGLISH: Gives the largest fee
+
+QUERY: SELECT * FROM FEE WHERE amount BETWEEN 30 AND 300 ORDER BY amount; 
+RESULT:
+222222
+100
+
+555555
+124.15
+
+444444
+214
+
+333333
+246
+ENGLISH: Selects all fees with amount between 30 and 300 and then orders them by their amounts
+
+QUERY: SELECT * FROM CHECK_OUT;
+RESULT:
+convention
+2017-03-02
+2017-02-28
+1
+8888888888
+
+meeting
+2017-03-02
+2017-03-02
+2
+7777777777
+
+travel
+2017-03-28
+2017-03-02
+3
+6666666666
+
+lecture
+2017-04-02
+2017-02-02
+4
+5555555555
+
+lecture
+2017-05-02
+2017-02-28
+5
+4444444444
+
+convention
+2017-03-29
+2017-03-22
+6
+3333333333
+
+convention
+2017-03-21
+2017-02-28
+7
+2222222222
+
+travel
+2017-03-02
+2017-02-28
+8
+1111111111
+
+travel
+2017-03-10
+0000-00-00
+9
+0
+
+meeting
+2017-03-02
+2017-03-02
+21
+2222222222
+ENGLISH: Selects all check outs
+
+QUERY: SELECT DISTINCT EMPLOYEE.name FROM EMPLOYEE INNER JOIN CHECK_OUT ON EMPLOYEE.employee_id = CHECK_OUT.employee_id;
+RESULT:
+Ryan Reynolds
+Megan Fox
+Jeff Gordan
+Jeff Racing
+Reynolds Ryan
+Cloud Nine
+Phoenix One
+Team Envy
+Bob Dylan
+ENGLISH: Gives names of employees with check outs
+
+QUERY: SELECT DISTINCT DEPARTMENT.department_name FROM DEPARTMENT INNER JOIN OWES ON DEPARTMENT.department_name = OWES.department_name;
+RESULT:
+Accounting
+Advising
+Food Services
+Graduate Studies
+Honors
+Information Services
+Security
+Study Abroad
+ENGLISH: Gives all department names that have a fee to pay
+
+QUERY: SELECT * FROM STORE_LOCATION LEFT JOIN FOR_SALE_AT ON STORE_LOCATION.address = FOR_SALE_AT.address;
+RESULT:
+www.forsale.com
+1
+1
+123.00
+www.forsale.com
+
+www.forsale.com
+1
+21
+121.00
+www.forsale.com
+
+1232 WASHINGTON
+0
+22
+1023.00
+1232 WASHINGTON
+
+1232 WASHINGTON
+0
+6
+234.00
+1232 WASHINGTON
+ENGLISH: Grabs all locations no matter what, and then includes all items being sold at those locations if they exist
+
+QUERY: SELECT ITEM.equipment_id, ITEM.serial_number, CHECK_OUT.purpose, CHECK_OUT.due_date FROM CHECK_OUT RIGHT JOIN ITEM ON CHECK_OUT.equipment_id = ITEM.equipment_id;
+RESULT:
+1
+1212121212
+convention
+2017-03-02
+
+2
+1313131313
+meeting
+2017-03-02
+
+3
+1414141414
+travel
+2017-03-28
+
+4
+1515151515
+lecture
+2017-04-02
+
+5
+1616161616
+lecture
+2017-05-02
+
+6
+1717171717
+convention
+2017-03-29
+
+7
+1818181818
+convention
+2017-03-21
+
+8
+1919191919
+travel
+2017-03-02
+
+9
+2020202020
+travel
+2017-03-10
+
+0
+2121212121
+NULL
+NULL
+
+21
+2222222222
+meeting
+2017-03-02
+
+22
+2323232323
+NULL
+NULL
+
+23
+2424242424
+NULL
+NULL
+ENGLISH: Gives all items, and if the items have been checked out it lists its purpose and due date
+
+QUERY: SELECT device_type, COUNT(device_type) FROM SERVICE_TAG_ITEM INNER JOIN ITEM ON ITEM.serial_number = SERVICE_TAG_ITEM.serial_number INNER JOIN CHECK_OUT ON ITEM.equipment_id = CHECK_OUT.equipment_id GROUP BY device_type ORDER BY COUNT(device_type) DESC LIMIT 1;
+RESULT: desktop 1
+ENGLISH: Find the Device_Type that is most commonly checked out
+
+QUERY: SELECT brand FROM SERVICE_TAG_ITEM;
+RESULT:
+dell
+lenovo
+apple
+ENGLISH: Gives all brands represented in the service tag items
+
+QUERY: SELECT name, job_title FROM EMPLOYEE;
+RESULT:
+Bob Dylan
+CEO
+
+Ryan Reynolds
+elite janitor
+
+Megan Fox
+accountant
+
+Jeff Gordan
+security guard tier
+
+Jeff Racing
+security guard tier
+
+Reynolds Ryan
+janitors assistant
+
+Cloud Nine
+IS officer
+
+Phoenix One
+CIO
+
+Team Envy
+CMO
+
+Abednego Ramiro
+CBO
+ENGLISH: Gives all employee names and job titles
+
+QUERY: SELECT * FROM WORKS_AT;
+RESULT:
+8888888888
+8056 SW. Corona, SC 29406
+
+0
+8485 N. Brandywine Drive Palme
+
+1111111111
+55 Wood Court Erie, PA 16506
+
+2222222222
+926 Fairview Road Pewaukee, WI
+
+3333333333
+9758 Schoolhouse Court Southga
+
+4444444444
+7533 Briarwood St. Madison, AL
+
+5555555555
+63 West Tower Dr. Freeport, NY
+
+6666666666
+90 Squaw Creek Dr. Oakland Gar
+
+7777777777
+7899 Deerfield Street Middle R
+
+9999999999
+43 Ann St. Vineland, NJ 08360
+ENGLISH: Gives employee ids, and where they work
+
+QUERY: SELECT * FROM SERVICE_TAG_ITEM WHERE NOT device_type = 'laptop'; 
+RESULT:
+desktop
+790
+dell
+p232
+i7 g2
+8GB
+1222.2100
+2222222222
+
+tablet
+200
+apple
+a11
+i2 g1
+9GB
+1232.1200
+2424242424
+ENGLISH: Gives service tag items that aren’t laptops
+
+QUERY: SELECT SUM(amount) FROM FEE;
+RESULT: 5104.330055236816
+ENGLISH: Gives total of all fees
+
+QUERY: SELECT DISTINCT department_name FROM WORKS_FOR;
+RESULT:
+Accounting
+Food Services
+Graduate Studies
+Honors
+Information Services
+Security
+Study Abroad
+ENGLISH: Gives all departments that currently have employees
+
+QUERY: SELECT * FROM STORE_LOCATION WHERE online = true;
+RESULT: www.forsale.com 1
+ENGLISH: Gives all online stores
+
+QUERY: SELECT * FROM SERVICE_TAG; 
+RESULT: 
+4545454545454545
+99999999999999999999
+2222222222
+
+4646464646464646
+88888888888888888888
+2222222222
+
+4747474747474747
+66666666666666666666
+2323232323
+
+4848484848484848
+55555555555555555555
+2323232323
+
+4949494949494949
+99999999999999999999
+2424242424
+ENGLISH: Gives all service tags
+
+QUERY: SELECT * FROM WORKS_FOR INNER JOIN WORKS_AT ON WORKS_FOR.employee_id = WORKS_AT.employee_id;
+RESULT:
+0
+Accounting
+0
+8485 N. Brandywine Drive Palme
+
+1111111111
+Accounting
+1111111111
+55 Wood Court Erie, PA 16506
+
+2222222222
+Honors
+2222222222
+926 Fairview Road Pewaukee, WI
+
+3333333333
+Honors
+3333333333
+9758 Schoolhouse Court Southga
+
+4444444444
+Graduate Studies
+4444444444
+7533 Briarwood St. Madison, AL
+
+5555555555
+Graduate Studies
+5555555555
+63 West Tower Dr. Freeport, NY
+
+6666666666
+Food Services
+6666666666
+90 Squaw Creek Dr. Oakland Gar
+
+7777777777
+Information Services
+7777777777
+7899 Deerfield Street Middle R
+
+8888888888
+Study Abroad
+8888888888
+8056 SW. Corona, SC 29406
+
+9999999999
+Security
+9999999999
+43 Ann St. Vineland, NJ 08360
+ENGLISH: Gives join of works_for and works_at as long as they have same employee
+
+QUERY: DELETE FROM FEE WHERE amount <= 10;
+RESULT: 1 entry was removed.
+ENGLISH: Deletes an entries from the table were the amount is less than 10.
+
+QUERY: SELECT * FROM PAYMENT;
+RESULT: 
+2015-03-12
+15.0000
+1111111111
+777777
+
+2015-12-18
+122.0000
+1111111112
+777777
+
+2016-01-01
+500.0000
+0
+0
+
+2016-09-26
+214.0000
+6666666666
+444444
+
+2017-03-13
+1.1000
+8888888888
+222222
+ENGLISH: Select all payment data
+
+QUERY:
+RESULT:
+ENGLISH:
+
+QUERY:
+RESULT:
+ENGLISH:
+
+QUERY:
+RESULT:
+ENGLISH:
+
+QUERY:
+RESULT:
+ENGLISH:
+
+QUERY: UPDATE FEE,PAYMENT SET FEE.amount = FEE.amount - PAYMENT.payment_amount WHERE PAYMENT.fee_number = FEE.fee_number;
+RESULT: 4 rows affected (which matches how many payments were made)
+ENGLISH: Updating the fee table after accepting a payment
+
+
+SQL SPECIFICATION FROM PHASE 1:
+
+Fee table
+	Create table fee(
+		FEE_NUMBER DECIMAL(6,0) NOT NULL PRIMARY KEY,
+		AMOUNT FLOAT
+	);
+
+Owes relation table
+	Create table owes(
+		FEE_NUMBER DECIMAL(6,0) NOT NULL PRIMARY KEY,
+		DEPARTMENT_NAME VARCHAR(30) NOT NULL,
+		UNIQUE(FEE_NUMBER),
+FOREIGN KEY (FEE_NUMBER) REFERENCES FEE(FEE_NUMBER),
+		FOREIGN KEY (DEPARTMENT_NAME) REFERENCES DEPARTMENT(DEPARTMENT_NAME)
+);
+
+Department Table
+	Create table department(
+		DEPARTMENT_NAME VARCHAR(30) NOT NULL PRIMARY KEY
+		);
+
+Works_for relation table
+	Create table works_for(
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL PRIMARY KEY,
+		DEPARTMENT_NAME VARCHAR(30) NOT NULL,
+		FOREIGN KEY (EMPLOYEE_ID) REFERENCES EMPLOYEE(EMPLOYEE_ID),
+		FOREIGN KEY (DEPARTMENT_NAME) REFERENCES DEPARTMENT(DEPARTMENT_NAME),
+		UNIQUE(EMPLOYEE_ID)
+		);
+
+Employee table
+	Create table employee(
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL PRIMARY KEY,
+		NAME  VARCHAR(20),
+		JOB_TITLE VARCHAR(20)
+		);
+
+Works_At relation table
+	Create table works_at(
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL PRIMARY KEY,
+		ADDRESS VARCHAR(30),
+		FOREIGN KEY( EMPLOYEE_ID) REFERENCES EMPLOYEE(EMPLOYEE_ID),
+		FOREIGN KEY (ADDRESS) REFERENCES WORKPLACE_LOCATION(ADDRESS),
+		UNIQUE(EMPLOYEE_ID)
+		);
+
+Workplace_location table
+	Create table workplace_location(
+		ADDRESS VARCHAR(30) NOT NULL PRIMARY KEY,
+		BUILDING_NAME VARCHAR(30)
+		);
+
+Check_out relation table
+	Create table check_out(
+		PURPOSE VARCHAR(20),
+		DUE_DATE DATE,
+		CHECKED_OUT_DATE DATE,
+		EQUIPMENT_ID DECIMAL(9,0) NOT NULL PRIMARY KEY,
+		EMPLOYEE_ID DECIMAL(11,0) NOT NULL,
+		FOREIGN KEY (EQUIPMENT_ID) REFERENCES ITEM(EQUIPMENT_ID),
+		FOREIGN KEY (EMPLOYEE_ID) REFERENCES EMPLOYEE(EMPLOYEE_ID),
+		UNIQUE(EQUIPMENT_ID)
+		);
+
+Item table
+	Create table item(
+		EQUIPMENT_ID DECIMAL(9,0) NOT NULL PRIMARY KEY,
+		SERIAL_NUMBER DECIMAL(10,0)
+		);
+
+For_Sale_At relation table
+	Create table for_sale_at(
+		EQUIPMENT_ID DECIMAL(9,0) NOT NULL PRIMARY KEY,
+		PRICE DECIMAL(13,2) NOT NULL,
+		ADDRESS VARCHAR(30),
+		FOREIGN KEY (EQUIPMENT_ID) REFERENCES ITEM(EQUIPMENT_ID),
+		FOREIGN KEY (ADDRESS) REFERENCES STORE_LOCATION(ADDRESS),
+		UNIQUE(EQUIPMENT_ID,ADDRESS)
+		);
+
+Store_Location table
+	Create table store_location(
+		ADDRESS VARCHAR(30) NOT NULL PRIMARY KEY,
+		ONLINE BOOLEAN NOT NULL
+		);
+
+Service_Tag_Item table
+	Create table service_tag_item(
+		DEVICE_TYPE VARCHAR(10),
+		MODEL_NUMBER DECIMAL(8,0) NOT NULL,
+		BRAND VARCHAR(10),
+		MOTHERBOARD VARCHAR(15),
+		CPU VARCHAR(10),
+		RAM VARCHAR(5),
+		COST DECIMAL(12,4),
+		SERIAL_NUMBER DECIMAL(10,0) NOT NULL
+		);
+
+Nonservice_Tag_Item table
+	Create table nonservice_tag_item(
+		BRAND VARCHAR(10),
+		DEVICE_TYPE VARCHAR(10),
+		MODEL_NUMBER DECIMAL(8,0) NOT NULL,
+		COST DECIMAL(12,4),
+		SERIAL_NUMBER DECIMAL(10,0) NOT NULL PRIMARY KEY
+		);
+
+Warranty weak entity table
+	Create table warranty(
+		START_DATE DATE,
+		END_DATE DATE,
+		WARRANTY_TYPE VARCHAR(20),
+		WARRANTY_ID DECIMAL(16,0),
+		SERIAL_NUMBER DECIMAL(10,0) NOT NULL,
+		PRIMARY KEY(SERIAL_NUMBER, WARRANTY_ID)
+		);
+
+Payment weak entity table
+	Create table payment(
+		PAYMENT_DATE DATE,
+		PAYMENT_AMOUNT DECIMAL(12,4),
+		PAYMENT_NUMBER DECIMAL(10,0),
+		FEE_NUMBER DECIMAL(6,0) NOT NULL,
+		PRIMARY KEY (PAYMENT_NUMBER, FEE_NUMBER)
+		);
+Fee_Payment relation table
+	Create table fee_payment(
+		PAYMENT_NUMBER DECIMAL(10,0) NOT NULL,
+		FEE_NUMBER DECIMAL(6,0) NOT NULL,
+		PRIMARY KEY (PAYMENT_NUMBER, FEE_NUMBER)
+		);
+
+Service_Tag relation table
+	Create table service_tag(
+		WARRANTY_ID DECIMAL(16,0),
+		SERVICE_TAG_NUMBER DECIMAL(20,0),
+		SERIAL_NUMBER DECIMAL(10,0)
+);
+
+
+LIST OF CHANGES FROM PHASE 1:
+We did not make any changes from the specification from Phase 1.
